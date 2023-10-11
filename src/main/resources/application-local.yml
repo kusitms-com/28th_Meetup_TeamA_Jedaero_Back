@@ -10,7 +10,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/jaedaero
+    url: jdbc:h2:tcp://localhost/~/backend
     username: sa
     driver-class-name: org.h2.Driver
 
