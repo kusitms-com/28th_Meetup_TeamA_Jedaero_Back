@@ -1,13 +1,13 @@
-package com.jaedaero;
+package com.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JaedaeroApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JaedaeroApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }
