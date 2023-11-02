@@ -3,7 +3,7 @@ version: '3'
 services:
   springboot:
     container_name: spring-dev
-    image: jedero/backend:latest
+    image: jederosite/backend:latest
     ports:
       - 8080:8080
     environment:
