@@ -7,10 +7,19 @@ services:
     ports:
       - 8080:8080
     environment:
-      SPRING_PROFILES_ACTIVE : dev-env
+      SPRING_PROFILES_ACTIVE: dev-env
     networks:
-      - my_network
+      - jedero_network
+
+  redis:
+    container_name: redis-jedero
+    hostname: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - jedero_network
 
 networks:
-  my_network:
+  jedero_network:
     driver: bridge
