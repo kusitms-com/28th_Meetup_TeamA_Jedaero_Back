@@ -1,29 +1,22 @@
 package com.backend.config;
 
-import com.backend.domain.auth.filter.CustomJsonAuthenticationFilter;
-import com.backend.domain.auth.handler.LoginFailureHandler;
-import com.backend.domain.auth.handler.LoginSuccessHandler;
-import com.backend.domain.auth.service.LoginService;
-import com.backend.domain.user.repository.UserRepository;
-import com.backend.jwt.JwtAccessDeniedHandler;
-import com.backend.jwt.JwtAuthenticationEntryPoint;
+import com.backend.jwt.filter.ApiAccessDeniedHandler;
+import com.backend.jwt.filter.ApiAuthenticationEntryPoint;
 import com.backend.jwt.filter.JwtAuthenticationFilter;
-import com.backend.jwt.service.JwtService;
-import com.backend.util.RedisUtil;
+import com.backend.jwt.service.JwtProvider;
+import com.backend.jwt.service.ApiUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,27 +24,19 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
-    private final LoginService loginService;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final RedisUtil redisUtil;
+
+    private final JwtProvider jwtProvider;
+    private final ApiUserDetailsService userDetailsService;
+    private final ApiAuthenticationEntryPoint entryPoint;
+    private final ApiAccessDeniedHandler deniedHandler;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(new HandlerMappingIntrospector());
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -62,6 +47,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(mvcMatcherBuilder.pattern("/auth/login")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/auth/join")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("/auth/reissue")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/css/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/js/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/images/**")).permitAll()
@@ -72,49 +58,22 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/mail/**")).permitAll()
                                 .anyRequest().authenticated())
-                .addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter(), CustomJsonAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.accessDeniedHandler(jwtAccessDeniedHandler)
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint));
+                .exceptionHandling()
+                .authenticationEntryPoint(entryPoint)
+                .accessDeniedHandler(deniedHandler);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+        return http.getOrBuild();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(loginService);
-        return new ProviderManager(provider);
-    }
-
-    @Bean
-    public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtService, userRepository);
-    }
-
-    @Bean
-    public LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler();
-    }
-
-    @Bean
-    public CustomJsonAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
-        CustomJsonAuthenticationFilter customJsonUsernamePasswordLoginFilter = new CustomJsonAuthenticationFilter(objectMapper);
-        customJsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
-        customJsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
-        customJsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
-        return customJsonUsernamePasswordLoginFilter;
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtService, userRepository, redisUtil);
+        return new JwtAuthenticationFilter(jwtProvider, userDetailsService);
     }
 
     @Override

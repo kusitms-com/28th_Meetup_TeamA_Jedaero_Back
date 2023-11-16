@@ -1,14 +1,14 @@
 package com.backend.domain.auth.service;
 
 import com.backend.domain.auth.dto.request.JoinRequestDto;
+import com.backend.domain.auth.dto.request.LoginRequestDto;
+import com.backend.jwt.service.JwtProvider;
+import com.backend.jwt.token.RefreshToken;
+import com.backend.jwt.token.Token;
 import com.backend.domain.user.entity.User;
 import com.backend.domain.user.repository.UserRepository;
 import com.backend.error.ErrorCode;
 import com.backend.error.exception.custom.BusinessException;
-import com.backend.error.exception.custom.TokenException;
-import com.backend.jwt.service.JwtService;
-import com.backend.util.RedisUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,30 +17,66 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final RedisUtil redisUtil;
 
+    @Transactional
+    public Token login(LoginRequestDto loginRequestDto) {
+        String email = loginRequestDto.email();
+        String password = loginRequestDto.password();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        Token token = jwtProvider.createToken(email);
+
+        user.updateRefreshToken(token.getRefreshToken().getData());
+
+        return token;
+    }
+
+    @Transactional
     public void join(JoinRequestDto joinRequestDto) {
         if (userRepository.existsByEmail(joinRequestDto.email())) {
             throw new BusinessException(ErrorCode.ALREADY_EXIST_EMAIL);
         }
-
-        User user = joinRequestDto.toEntity();
-        user.passwordEncode(passwordEncoder);
-        userRepository.save(user);
+//        if (userRepository.existsByNickname(joinRequestDto.getNickname())) {}
+        userRepository.save(joinRequestDto.toEntity(passwordEncoder));
     }
 
-    public void logout(HttpServletRequest request) {
-        String accessToken = jwtService.extractAccessToken(request).orElseThrow(() -> new TokenException(ErrorCode.INVALID_TOKEN));
-        String email = jwtService.extractUserId(accessToken).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    @Transactional
+    public Token reissue(RefreshToken refreshToken) {
+        String refreshTokenValue = refreshToken.getData();
 
-        redisUtil.delete(email);
-        redisUtil.setBlackList(email, accessToken, jwtService.getAccessTokenExpirationPeriod());
+        log.info("리프레쉬 토큰: {}", refreshTokenValue);
+        if (jwtProvider.isExpired(refreshTokenValue)) {
+            throw new BusinessException(ErrorCode.INVALID_TOKEN);
+        }
+
+        User user = userRepository.findByRefreshToken(refreshTokenValue)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        Token token = jwtProvider.createToken(user.getEmail());
+
+        user.updateRefreshToken(token.getRefreshToken().getData());
+
+        return token;
+    }
+
+    @Transactional
+    public void logout(String email) {
+        log.info("이메일 : {}", email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        user.invalidateRefreshToken();
     }
 }

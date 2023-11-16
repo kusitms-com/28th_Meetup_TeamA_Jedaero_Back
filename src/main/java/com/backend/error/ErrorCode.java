@@ -14,7 +14,8 @@ public enum ErrorCode {
     ALREADY_LOGOUT_MEMBER(BAD_REQUEST, "이미 로그아웃한 회원입니다."),
     ALREADY_EXIST_EMAIL(BAD_REQUEST, "이미 존재하는 이메일입니다."),
     INVALID_TOKEN(UNAUTHORIZED, "잘못된 토큰입니다."),
-    INVALID_GROUP_TYPE(UNAUTHORIZED, "잘못된 그룹 종류입니다.");
+    INVALID_GROUP_TYPE(UNAUTHORIZED, "잘못된 그룹 종류입니다."),
+    INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다.");
 
     private final int code;
     private final String message;

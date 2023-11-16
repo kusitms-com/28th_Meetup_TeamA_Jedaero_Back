@@ -1,4 +1,4 @@
-package com.backend.jwt;
+package com.backend.jwt.filter;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class ApiAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);

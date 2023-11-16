@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -26,17 +25,24 @@ public class User {
 
     private String typeName;
 
+    private String refreshToken;
+
     //todo. 대표 이미지 필드 추가
 
     @Builder
-    public User(String email, String password, GroupType type, String typeName) {
+    public User(String email, String password, GroupType type, String typeName, String refreshToken) {
         this.email = email;
         this.password = password;
         this.type = type;
         this.typeName = typeName;
+        this.refreshToken = refreshToken;
     }
 
-    public void passwordEncode(PasswordEncoder passwordEncoder) {
-        this.password = passwordEncoder.encode(this.password);
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void invalidateRefreshToken() {
+        this.refreshToken = null;
     }
 }
