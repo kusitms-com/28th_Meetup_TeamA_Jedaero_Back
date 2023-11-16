@@ -5,6 +5,7 @@ import com.backend.jwt.filter.ApiAuthenticationEntryPoint;
 import com.backend.jwt.filter.JwtAuthenticationFilter;
 import com.backend.jwt.service.JwtProvider;
 import com.backend.jwt.service.ApiUserDetailsService;
+import com.backend.util.LoginUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -59,8 +63,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers(mvcMatcherBuilder.pattern("/mail/**")).permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling()
-                .authenticationEntryPoint(entryPoint)
-                .accessDeniedHandler(deniedHandler);
+                .authenticationEntryPoint(entryPoint);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.getOrBuild();
@@ -83,5 +86,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .exposedHeaders("*");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new LoginUserArgumentResolver());
     }
 }
