@@ -6,12 +6,15 @@ import com.backend.jwt.token.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 
@@ -19,24 +22,25 @@ import java.util.Optional;
 @Component
 @Getter
 public class JwtProvider {
-    @Value("${jwt.secretKey}")
-    private String secretKey;
-
-    @Value("${jwt.access.expiration}")
-    private Integer accessTokenExpirationPeriod;
-
-    @Value("${jwt.refresh.expiration}")
-    private Integer refreshTokenExpirationPeriod;
-
-    @Value("${jwt.access.header}")
-    private String accessHeader;
-
-    @Value("${jwt.refresh.header}")
-    private String refreshHeader;
-
-    private static final String ID_CLAIM = "email";
-    private static final String ROLE_CLAIM = "roles";
+    private final Key secretKey;
+    private final Long accessTokenExpirationPeriod;
+    private final String accessHeader;
+    private final Long refreshTokenExpirationPeriod;
+    private final String refreshHeader;
     private static final String BEARER = "Bearer ";
+
+    public JwtProvider(@Value("${jwt.secretKey}") String secretKey,
+                       @Value("${jwt.access.expiration}") Long accessTokenExpirationPeriod,
+                       @Value("${jwt.access.header}") String accessHeader,
+                       @Value("${jwt.refresh.expiration}") Long refreshTokenExpirationPeriod,
+                       @Value("${jwt.refresh.header}") String refreshHeader) {
+
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.accessTokenExpirationPeriod = accessTokenExpirationPeriod;
+        this.accessHeader = accessHeader;
+        this.refreshTokenExpirationPeriod = refreshTokenExpirationPeriod;
+        this.refreshHeader = refreshHeader;
+    }
 
     public Token createToken(String email) {
         AccessToken accessToken = AccessToken.builder()
@@ -55,50 +59,49 @@ public class JwtProvider {
     }
 
     public Optional<String> extractToken(HttpServletRequest request) {
-        log.info("엑세스 토큰 : {}", request.getHeader("Authorization"));
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(token -> token.startsWith(BEARER))
                 .map(token -> token.replace(BEARER, ""));
     }
 
     public String getUsernameFromToken(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get(ID_CLAIM, String.class);
+                .getSubject();
     }
 
-    public boolean isExpired(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration()
-                .before(new Date());
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public String createAccessToken(String email) {
-        Claims claims = Jwts.claims();
-        claims.put(ID_CLAIM, email);
-
+    private String createAccessToken(String email) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setSubject(email)
                 .setExpiration(expireTime(accessTokenExpirationPeriod))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
-    public String createRefreshToken() {
+    private String createRefreshToken() {
         return Jwts.builder()
-                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expireTime(refreshTokenExpirationPeriod))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey)
                 .compact();
     }
 
-    private Date expireTime(int expirationPeriod) {
+    private Date expireTime(Long expirationPeriod) {
         return new Date(System.currentTimeMillis() + expirationPeriod);
     }
 }
