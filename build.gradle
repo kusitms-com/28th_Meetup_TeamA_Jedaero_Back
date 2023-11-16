@@ -31,7 +31,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // jwt
-    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
     // spring security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     // redis
