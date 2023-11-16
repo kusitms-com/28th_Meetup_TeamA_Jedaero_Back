@@ -29,19 +29,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtProvider.extractToken(request)
-                .filter(inputToken -> !jwtProvider.isExpired(inputToken))
+                .filter(jwtProvider::isTokenValid)
                 .orElse(null);
 
-        log.info("토큰 : {}", token);
         if (token != null) {
             String username = jwtProvider.getUsernameFromToken(token);
-            log.info("토큰이 존재한다. username : {}", username);
+
             try {
                 UserDetails userDetails = apiUserDetailsService.loadUserByUsername(username);
 
                 if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

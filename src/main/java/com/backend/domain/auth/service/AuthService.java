@@ -1,5 +1,6 @@
 package com.backend.domain.auth.service;
 
+import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.auth.dto.request.JoinRequestDto;
 import com.backend.domain.auth.dto.request.LoginRequestDto;
 import com.backend.jwt.service.JwtProvider;
@@ -58,7 +59,7 @@ public class AuthService {
         String refreshTokenValue = refreshToken.getData();
 
         log.info("리프레쉬 토큰: {}", refreshTokenValue);
-        if (jwtProvider.isExpired(refreshTokenValue)) {
+        if (!jwtProvider.isTokenValid(refreshTokenValue)) {
             throw new BusinessException(ErrorCode.INVALID_TOKEN);
         }
 
@@ -72,9 +73,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String email) {
-        log.info("이메일 : {}", email);
-        User user = userRepository.findByEmail(email)
+    public void logout(LoginUser loginUser) {
+        log.info("이메일 : {}", loginUser.getEmail());
+        User user = userRepository.findByEmail(loginUser.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.invalidateRefreshToken();

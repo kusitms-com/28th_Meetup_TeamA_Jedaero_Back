@@ -1,4 +1,14 @@
 package com.backend.domain.auth.dto;
 
-public record LoginUser(String email, String password) {
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+public class LoginUser {
+    private String email;
+
+    @Builder
+    public LoginUser(String email) {
+        this.email = email;
+    }
 }
