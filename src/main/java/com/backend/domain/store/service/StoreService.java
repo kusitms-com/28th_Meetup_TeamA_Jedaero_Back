@@ -1,7 +1,7 @@
 package com.backend.domain.store.service;
 
 import com.backend.domain.auth.dto.LoginUser;
-import com.backend.domain.store.dto.CreatePickRequest;
+import com.backend.domain.store.dto.PickRequest;
 import com.backend.domain.store.dto.CreateStoreRequest;
 import com.backend.domain.store.dto.ReadStoreDetailsDto;
 import com.backend.domain.store.dto.StoreDetailsDto;
@@ -52,7 +52,7 @@ public class StoreService {
         return ReadStoreDetailsDto.from(storeDetail, businessHours);
     }
 
-    public void createPick(LoginUser loginUser, CreatePickRequest request) {
+    public void createPick(LoginUser loginUser, PickRequest request) {
         User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
         Store store = storeRepository.findById(request.getStoreId()).orElseThrow(RuntimeException::new);
         pickRepository.findByUserAndStore(user, store).ifPresent(pick -> {
@@ -61,4 +61,13 @@ public class StoreService {
         Pick pick = user.createPick(store);
         pickRepository.save(pick);
     }
+
+    public void deletePick(LoginUser loginUser, PickRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Store store = storeRepository.findById(request.getStoreId()).orElseThrow(RuntimeException::new);
+        Pick pick = pickRepository.findByUserAndStore(user, store).orElseThrow(RuntimeException::new);
+        user.delete(pick);
+        pickRepository.delete(pick);
+    }
+
 }

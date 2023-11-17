@@ -30,4 +30,10 @@ public class Pick extends BaseEntity {
         this.user = user;
     }
 
+    public void delete() {
+        this.store.delete(this);
+        this.store = null;
+        this.user = null;
+    }
+
 }

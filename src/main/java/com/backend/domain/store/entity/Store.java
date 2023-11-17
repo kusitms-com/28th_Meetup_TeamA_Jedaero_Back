@@ -51,4 +51,8 @@ public class Store extends BaseEntity {
         picks.add(pick);
     }
 
+    public void delete(Pick pick) {
+        picks.remove(pick);
+    }
+
 }

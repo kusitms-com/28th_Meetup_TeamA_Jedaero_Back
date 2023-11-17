@@ -75,4 +75,9 @@ public class User extends BaseEntity {
         return pick;
     }
 
+    public void delete(Pick pick) {
+        pick.delete();
+        picks.remove(pick);
+    }
+
 }

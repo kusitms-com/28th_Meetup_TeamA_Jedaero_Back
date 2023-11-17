@@ -29,9 +29,15 @@ public class StoreController {
     }
 
     @PostMapping("/pick")
-    public ResponseEntity<Void> createPick(@Login LoginUser loginUser, @RequestBody CreatePickRequest request) {
+    public ResponseEntity<Void> createPick(@Login LoginUser loginUser, @RequestBody PickRequest request) {
         storeService.createPick(loginUser, request);
         return ResponseDto.created();
+    }
+
+    @DeleteMapping("/pick")
+    public ResponseEntity<Void> deletePick(@Login LoginUser loginUser, @RequestBody PickRequest request) {
+        storeService.deletePick(loginUser, request);
+        return ResponseDto.ok();
     }
 
 }
