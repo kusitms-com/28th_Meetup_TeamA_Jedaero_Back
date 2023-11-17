@@ -28,4 +28,10 @@ public class StoreController {
         return ResponseDto.ok(storeService.readStoreDetails(loginUser, storeId));
     }
 
+    @PostMapping("/pick")
+    public ResponseEntity<Void> createPick(@Login LoginUser loginUser, @RequestBody CreatePickRequest request) {
+        storeService.createPick(loginUser, request);
+        return ResponseDto.created();
+    }
+
 }

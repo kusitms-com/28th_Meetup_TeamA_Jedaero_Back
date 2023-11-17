@@ -1,13 +1,16 @@
 package com.backend.domain.store.service;
 
 import com.backend.domain.auth.dto.LoginUser;
+import com.backend.domain.store.dto.CreatePickRequest;
 import com.backend.domain.store.dto.CreateStoreRequest;
 import com.backend.domain.store.dto.ReadStoreDetailsDto;
 import com.backend.domain.store.dto.StoreDetailsDto;
 import com.backend.domain.store.entity.BusinessHour;
 import com.backend.domain.store.entity.Category;
+import com.backend.domain.store.entity.Pick;
 import com.backend.domain.store.entity.Store;
 import com.backend.domain.store.repository.BusinessHourRepository;
+import com.backend.domain.store.repository.PickRepository;
 import com.backend.domain.store.repository.StoreRepository;
 import com.backend.domain.user.entity.User;
 import com.backend.domain.user.repository.UserRepository;
@@ -28,6 +31,8 @@ public class StoreService {
 
     private final UserRepository userRepository;
 
+    private final PickRepository pickRepository;
+
     public void createStore(CreateStoreRequest request) {
         Category category = request.getCategory();
         List<Store> stores = request.getData().stream()
@@ -47,4 +52,13 @@ public class StoreService {
         return ReadStoreDetailsDto.from(storeDetail, businessHours);
     }
 
+    public void createPick(LoginUser loginUser, CreatePickRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Store store = storeRepository.findById(request.getStoreId()).orElseThrow(RuntimeException::new);
+        pickRepository.findByUserAndStore(user, store).ifPresent(pick -> {
+            throw new RuntimeException();
+        });
+        Pick pick = user.createPick(store);
+        pickRepository.save(pick);
+    }
 }

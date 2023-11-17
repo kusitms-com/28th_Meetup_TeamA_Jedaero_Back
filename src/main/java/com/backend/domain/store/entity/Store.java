@@ -47,4 +47,8 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store")
     private List<Pick> picks = new ArrayList<>();
 
+    public void add(Pick pick) {
+        picks.add(pick);
+    }
+
 }

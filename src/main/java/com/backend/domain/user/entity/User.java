@@ -2,6 +2,7 @@ package com.backend.domain.user.entity;
 
 import com.backend.common.domain.BaseEntity;
 import com.backend.domain.store.entity.Pick;
+import com.backend.domain.store.entity.Store;
 import com.backend.domain.university.entity.University;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -63,4 +64,15 @@ public class User extends BaseEntity {
     public void deleteProofImage() {
         this.proofImageUrl = null;
     }
+
+    public Pick createPick(Store store) {
+        Pick pick = Pick.builder()
+                .user(this)
+                .store(store)
+                .build();
+        picks.add(pick);
+        store.add(pick);
+        return pick;
+    }
+
 }
