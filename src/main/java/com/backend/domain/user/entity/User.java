@@ -27,15 +27,16 @@ public class User {
 
     private String refreshToken;
 
-    //todo. 대표 이미지 필드 추가
+    private String proofImageUrl;
 
     @Builder
-    public User(String email, String password, GroupType type, String typeName, String refreshToken) {
+    public User(String email, String password, GroupType type, String typeName, String refreshToken, String proofImageUrl) {
         this.email = email;
         this.password = password;
         this.type = type;
         this.typeName = typeName;
         this.refreshToken = refreshToken;
+        this.proofImageUrl = proofImageUrl;
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -44,5 +45,9 @@ public class User {
 
     public void invalidateRefreshToken() {
         this.refreshToken = null;
+    }
+
+    public void deleteProofImage() {
+        this.proofImageUrl = null;
     }
 }

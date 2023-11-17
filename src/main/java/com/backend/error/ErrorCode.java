@@ -15,7 +15,9 @@ public enum ErrorCode {
     ALREADY_EXIST_EMAIL(BAD_REQUEST, "이미 존재하는 이메일입니다."),
     INVALID_TOKEN(UNAUTHORIZED, "잘못된 토큰입니다."),
     INVALID_GROUP_TYPE(BAD_REQUEST, "잘못된 그룹 종류입니다."),
-    INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다.");
+    INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다."),
+    IMAGE_UPLOAD_FAIL(BAD_REQUEST, "이미지 업로드에 실패했습니다."),
+    INVALID_FILE(BAD_REQUEST, "잘못된 파일 형식입니다.");
 
     private final int code;
     private final String message;
