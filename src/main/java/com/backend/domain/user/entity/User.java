@@ -1,16 +1,22 @@
 package com.backend.domain.user.entity;
 
+import com.backend.common.domain.BaseEntity;
+import com.backend.domain.store.entity.Pick;
+import com.backend.domain.university.entity.University;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -28,6 +34,13 @@ public class User {
     private String refreshToken;
 
     private String proofImageUrl;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "university_id")
+    private University university;
+
+    @OneToMany(mappedBy = "user")
+    private List<Pick> picks = new ArrayList<>();
 
     @Builder
     public User(String email, String password, GroupType type, String typeName, String refreshToken, String proofImageUrl) {
