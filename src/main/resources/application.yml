@@ -10,3 +10,4 @@ spring:
     include:
       - jwt
       - mail
+      - s3
