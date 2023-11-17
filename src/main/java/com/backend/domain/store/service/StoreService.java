@@ -1,9 +1,16 @@
 package com.backend.domain.store.service;
 
+import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.store.dto.CreateStoreRequest;
+import com.backend.domain.store.dto.ReadStoreDetailsDto;
+import com.backend.domain.store.dto.StoreDetailsDto;
+import com.backend.domain.store.entity.BusinessHour;
 import com.backend.domain.store.entity.Category;
 import com.backend.domain.store.entity.Store;
+import com.backend.domain.store.repository.BusinessHourRepository;
 import com.backend.domain.store.repository.StoreRepository;
+import com.backend.domain.user.entity.User;
+import com.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +24,10 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
 
+    private final BusinessHourRepository businessHourRepository;
+
+    private final UserRepository userRepository;
+
     public void createStore(CreateStoreRequest request) {
         Category category = request.getCategory();
         List<Store> stores = request.getData().stream()
@@ -27,6 +38,13 @@ public class StoreService {
                 })
                 .toList();
         storeRepository.saveAll(stores);
+    }
+
+    public ReadStoreDetailsDto readStoreDetails(LoginUser loginUser, Long storeId) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        StoreDetailsDto storeDetail = storeRepository.findStoreDetailById(user.getId(), storeId, user.getUniversity().getLatitude(), user.getUniversity().getLongitude()).orElseThrow(RuntimeException::new);
+        List<BusinessHour> businessHours = businessHourRepository.findByStoreStoreId(storeId);
+        return ReadStoreDetailsDto.from(storeDetail, businessHours);
     }
 
 }
