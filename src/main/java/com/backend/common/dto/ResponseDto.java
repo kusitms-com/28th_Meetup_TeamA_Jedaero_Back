@@ -16,6 +16,12 @@ public record ResponseDto<T>(T data) implements Serializable {
                 .body(data);
     }
 
+    public static ResponseEntity<Void> created() {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+
     public static ResponseEntity<Void> noContent() {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

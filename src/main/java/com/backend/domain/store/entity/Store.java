@@ -15,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Store extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
     private String name;
@@ -36,6 +37,9 @@ public class Store extends BaseEntity {
     private String mapUrl;
 
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<BusinessHour> businessHours = new ArrayList<>();
 
     @OneToMany(mappedBy = "store")
     private List<Contract> contracts = new ArrayList<>();

@@ -2,6 +2,8 @@ package com.backend.domain.store.entity;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum BusinessDay {
 
@@ -21,6 +23,13 @@ public enum BusinessDay {
     BusinessDay(int value, String dayOfWeek) {
         this.value = value;
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public static BusinessDay convert(String dayOfWeek) {
+        return Arrays.stream(BusinessDay.values())
+                .filter(b -> b.getDayOfWeek().equals(dayOfWeek))
+                .findFirst()
+                .orElse(BusinessDay.NONE);
     }
 
 }
