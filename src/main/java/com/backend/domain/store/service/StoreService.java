@@ -1,10 +1,7 @@
 package com.backend.domain.store.service;
 
 import com.backend.domain.auth.dto.LoginUser;
-import com.backend.domain.store.dto.PickRequest;
-import com.backend.domain.store.dto.CreateStoreRequest;
-import com.backend.domain.store.dto.ReadStoreDetailsDto;
-import com.backend.domain.store.dto.StoreDetailsDto;
+import com.backend.domain.store.dto.*;
 import com.backend.domain.store.entity.BusinessHour;
 import com.backend.domain.store.entity.Category;
 import com.backend.domain.store.entity.Pick;
@@ -12,9 +9,12 @@ import com.backend.domain.store.entity.Store;
 import com.backend.domain.store.repository.BusinessHourRepository;
 import com.backend.domain.store.repository.PickRepository;
 import com.backend.domain.store.repository.StoreRepository;
+import com.backend.domain.university.entity.University;
 import com.backend.domain.user.entity.User;
 import com.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +68,31 @@ public class StoreService {
         Pick pick = pickRepository.findByUserAndStore(user, store).orElseThrow(RuntimeException::new);
         user.delete(pick);
         pickRepository.delete(pick);
+    }
+
+    public ReadStoresDto readStores(LoginUser loginUser, ReadStoresRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        University university = user.getUniversity();
+        PageRequest pageRequest = PageRequest.of(request.getPageNumber(), request.getPageSize());
+        String keyword = getKeyword(request);
+        if (request.getIsPicked()) {
+            if (request.getCategory().equals(Category.NONE)) {
+                Page<StoresDto> stores = storeRepository.findAllContainsNameAndPicked(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
+                return ReadStoresDto.from(stores);
+            }
+            Page<StoresDto> stores = storeRepository.findAllContainsNameAndPickedAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
+            return ReadStoresDto.from(stores);
+        }
+        if (request.getCategory().equals(Category.NONE)) {
+            Page<StoresDto> stores = storeRepository.findAllContainsName(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
+            return ReadStoresDto.from(stores);
+        }
+        Page<StoresDto> stores = storeRepository.findAllContainsNameAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
+        return ReadStoresDto.from(stores);
+    }
+
+    private String getKeyword(ReadStoresRequest request) {
+        return "%" + request.getName() + "%";
     }
 
 }
