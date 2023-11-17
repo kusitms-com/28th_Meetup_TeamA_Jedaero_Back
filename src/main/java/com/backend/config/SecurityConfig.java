@@ -61,6 +61,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/mail/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("/s3/create")).permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling()
                 .authenticationEntryPoint(entryPoint);
