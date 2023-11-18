@@ -19,7 +19,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       s.store_id AS storeId," +
                     "       s.name AS storeName," +
                     "       s.description AS description," +
-                    "       IF(p.pick_id IS NOT NULL, 'true', 'false') AS isPicked," +
+                    "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
                     "       s.phone_number AS phoneNumber," +
@@ -42,7 +42,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       s.store_id AS storeId," +
                     "       s.name AS storeName," +
                     "       s.description AS description," +
-                    "       IF(p.pick_id IS NOT NULL, 'true', 'false') AS isPicked," +
+                    "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
@@ -71,7 +71,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "        s.store_id AS storeId," +
                     "        s.name AS storeName," +
                     "        s.description AS description," +
-                    "        IF(p.pick_id IS NOT NULL, 'true', 'false') AS isPicked," +
+                    "        CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "        s.category AS category," +
                     "        s.address AS address," +
                     "        ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
@@ -101,7 +101,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       s.store_id AS storeId," +
                     "       s.name AS storeName," +
                     "       s.description AS description," +
-                    "       IF(p.pick_id IS NOT NULL, 'true', 'false') AS isPicked," +
+                    "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
@@ -129,7 +129,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       s.store_id AS storeId," +
                     "       s.name AS storeName," +
                     "       s.description AS description," +
-                    "       IF(p.pick_id IS NOT NULL, 'true', 'false') AS isPicked," +
+                    "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
