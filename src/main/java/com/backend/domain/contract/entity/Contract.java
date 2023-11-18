@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "contract")
 public class Contract extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

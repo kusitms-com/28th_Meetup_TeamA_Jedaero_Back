@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "businesshour")
 public class BusinessHour {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
