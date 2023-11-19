@@ -31,7 +31,6 @@ public class StoreController {
         return ResponseDto.created();
     }
 
-    // TODO useremail을 바탕으로 university의 longitude, latitude 정보를 가져와서 이용한다.
         @GetMapping("/details/{storeId}")
         @Operation(
                 summary = "가게 상세 정보 조회",
@@ -47,6 +46,13 @@ public class StoreController {
     @GetMapping("/search")
     @Operation(
             summary = "가게 목록 검색 및 조회",
+            description =
+                    "<p>{url}/store/search?isPicked=true&name=건&category=FOOD&pageSize=40&pageNumber=0</p>" +
+                    "<p>isPicked = true/false, default = false</p>" +
+                    "<p>name = String 타입의 가게 명, 입력하지 않아도 사용 가능</p>" +
+                    "<p>category = [FOOD, CAFE, BEAUTY, CULTURE, ETC, NONE] 중 하나, default = NONE(카테고리 검색X)</p>" +
+                    "<p>pageSize = int 값, default = 40</p>" +
+                    "<p>pageNumber = 0부터 int 값, default = 0</p>",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
