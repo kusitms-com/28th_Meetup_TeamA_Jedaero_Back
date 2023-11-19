@@ -1,20 +1,44 @@
 package com.backend.domain.mail.service;
 
 import com.backend.domain.mail.dto.request.MailRequest;
+import com.backend.domain.mail.dto.request.SmsRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MailService {
+
     private final JavaMailSender javaMailSender;
-    @Value("{mail.mail.username}")
+
+    private DefaultMessageService messageService;
+
+    @Value("${spring.mail.username}")
     private String username;
+
+    @Value("${coolsms.api.key}")
+    private String apiKey;
+
+    @Value("${coolsms.api.secret}")
+    private String apiSecret;
+
+    @Value("${coolsms.api.fromNumber}")
+    private String fromNumber;
+
 
     public int sendAuthenticationCode(MailRequest mailRequest) {
         int code = (int) (Math.random() * 900000) + 100000;
@@ -30,5 +54,24 @@ public class MailService {
         javaMailSender.send(message);
 
         return code;
+    }
+
+    public int sendSMS(SmsRequest smsRequest) {
+        Message message = new Message();
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
+
+        Random rand = new Random();
+        String code = IntStream.range(0, 4)
+                .mapToObj(i -> Integer.toString(rand.nextInt(10)))
+                .collect(Collectors.joining());
+
+        message.setFrom(fromNumber);
+        message.setTo(smsRequest.toNumber());
+        message.setText("[제대로] 인증번호를 입력해주세요.\n인증번호: " + code);
+
+        SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+        log.info("SMS 메세지 결과 = {}", response);
+
+        return Integer.parseInt(code);
     }
 }
