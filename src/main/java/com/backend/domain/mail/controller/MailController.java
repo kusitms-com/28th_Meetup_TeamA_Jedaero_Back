@@ -29,7 +29,7 @@ public class MailController {
                     @ApiResponse(responseCode = "200", description = "인증 코드 전송 성공, 보낸 인증 코드를 반환합니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
-    @PostMapping("/mail")
+    @GetMapping("/mail")
     public ResponseEntity<Integer> sendCode(@Valid @RequestBody MailRequest emailRequest) {
         return ResponseEntity.ok(mailService.sendAuthenticationCode(emailRequest));
     }
