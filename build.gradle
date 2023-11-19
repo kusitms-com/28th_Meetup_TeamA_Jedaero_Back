@@ -43,6 +43,13 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    //sms
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    //RateLimiter
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot3', version: '2.1.0'
 }
 
 tasks.named('test') {

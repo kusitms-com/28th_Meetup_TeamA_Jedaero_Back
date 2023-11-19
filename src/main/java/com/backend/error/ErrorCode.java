@@ -17,7 +17,8 @@ public enum ErrorCode {
     INVALID_GROUP_TYPE(BAD_REQUEST, "잘못된 그룹 종류입니다."),
     INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다."),
     IMAGE_UPLOAD_FAIL(BAD_REQUEST, "이미지 업로드에 실패했습니다."),
-    INVALID_FILE(BAD_REQUEST, "잘못된 파일 형식입니다.");
+    INVALID_FILE(BAD_REQUEST, "잘못된 파일 형식입니다."),
+    TOO_MANY_SMS(TOO_MANY_REQUESTS, "짧은 시간에 너무 많은 요청을 보냈습니다. 1분 후에 재시도하세요.");
 
     private final int code;
     private final String message;
