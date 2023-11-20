@@ -14,10 +14,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -60,10 +56,7 @@ public class MailService {
         Message message = new Message();
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
 
-        Random rand = new Random();
-        String code = IntStream.range(0, 4)
-                .mapToObj(i -> Integer.toString(rand.nextInt(10)))
-                .collect(Collectors.joining());
+        int code = (int) (Math.random() * 9000) + 1000;
 
         message.setFrom(fromNumber);
         message.setTo(smsRequest.toNumber());
@@ -72,6 +65,6 @@ public class MailService {
         SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
         log.info("SMS 메세지 결과 = {}", response);
 
-        return Integer.parseInt(code);
+        return code;
     }
 }
