@@ -7,6 +7,7 @@ import com.backend.domain.popup.domain.EndDateType;
 import com.backend.domain.popup.domain.Popup;
 import com.backend.domain.popup.domain.ReservationType;
 import com.backend.domain.popup.dto.request.PopupCreateRequest;
+import com.backend.domain.popup.dto.response.PopupGetResponseDto;
 import com.backend.domain.popup.repository.PopupRepository;
 import com.backend.domain.store.entity.Store;
 import com.backend.domain.store.repository.StoreRepository;
@@ -15,6 +16,9 @@ import com.backend.domain.user.repository.UserRepository;
 import com.backend.error.ErrorCode;
 import com.backend.error.exception.custom.BusinessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,15 @@ public class PopupService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
     private final ContractRepository contractRepository;
+
+    public Page<PopupGetResponseDto> getPopups(LoginUser loginUser, int pageNumber) {
+        User user = userRepository.findByEmail(loginUser.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(pageNumber, 5);
+        Page<Popup> popups = userRepository.findPopupsByUserId(user.getId(), pageable);
+        return popups.map(PopupGetResponseDto::from);
+    }
 
     @Transactional
     public void createPopup(LoginUser loginUser, PopupCreateRequest popupCreateRequest) {
@@ -58,7 +71,7 @@ public class PopupService {
         popupRepository.deleteById(popupId);
     }
 
-    public LocalDateTime determineReservation(String reservation) {
+    private LocalDateTime determineReservation(String reservation) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         if (ReservationType.isNow(reservation)) {
             String formattedDateTimeString = LocalDateTime.now().format(formatter);
