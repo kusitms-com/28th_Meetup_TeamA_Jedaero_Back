@@ -18,7 +18,10 @@ public enum ErrorCode {
     INVALID_PASSWORD(BAD_REQUEST, "잘못된 비밀번호입니다."),
     IMAGE_UPLOAD_FAIL(BAD_REQUEST, "이미지 업로드에 실패했습니다."),
     INVALID_FILE(BAD_REQUEST, "잘못된 파일 형식입니다."),
-    TOO_MANY_SMS(TOO_MANY_REQUESTS, "짧은 시간에 너무 많은 요청을 보냈습니다. 1분 후에 재시도하세요.");
+    TOO_MANY_SMS(TOO_MANY_REQUESTS, "짧은 시간에 너무 많은 요청을 보냈습니다. 1분 후에 재시도하세요."),
+    NOT_EXISTS_POPUP_DATE(BAD_REQUEST, "존재하지 않는 팝업 기간입니다."),
+    STORE_NOT_FOUND(BAD_REQUEST, "해당 가게를 찾을 수 없습니다."),
+    INVALID_DATE(BAD_REQUEST, "잘못된 날짜 형식입니다.");
 
     private final int code;
     private final String message;
