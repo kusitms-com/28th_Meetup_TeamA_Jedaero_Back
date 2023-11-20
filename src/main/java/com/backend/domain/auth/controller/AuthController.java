@@ -71,7 +71,6 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissueToken(@CookieValue(name = "Authorization-refresh") String refreshToken,
                                                HttpServletResponse response) {
-        log.info("재발급 토큰 = {}", refreshToken);
         Token token = authService.reissue(
                 RefreshToken.builder()
                         .header("Authorization-refresh")
@@ -81,7 +80,7 @@ public class AuthController {
 
         setAccessToken(response, token.getAccessToken());
         setRefreshToken(response, token.getRefreshToken());
-
+        log.info("재발급 토큰 = {}", token.getRefreshToken().getData());
         return ResponseDto.created("토큰 재발급 성공");
     }
 
