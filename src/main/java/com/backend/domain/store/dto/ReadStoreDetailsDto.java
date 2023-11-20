@@ -24,6 +24,10 @@ public class ReadStoreDetailsDto {
 
     private String address;
 
+    private Double latitude;
+
+    private Double longitude;
+
     private List<BusinessHourDto> businessHours;
 
     private String phoneNumber;
@@ -41,6 +45,8 @@ public class ReadStoreDetailsDto {
                 .category(store.getCategory().getCategoryName())
                 .description(store.getDescription())
                 .address(store.getAddress())
+                .latitude(store.getLatitude())
+                .longitude(store.getLongitude())
                 .phoneNumber(store.getPhoneNumber())
                 .distance(store.getDistance())
                 .mapUrl(store.getMapUrl())
