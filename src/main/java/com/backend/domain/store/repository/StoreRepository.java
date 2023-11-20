@@ -45,6 +45,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
+                    "       s.latitude AS latitude," +
+                    "       s.longitude AS longitude," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
                     "  FROM store s" +
                     "  JOIN pick p ON s.store_id = p.store_id AND p.user_id = :userId" +
@@ -74,6 +76,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "        CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "        s.category AS category," +
                     "        s.address AS address," +
+                    "        s.latitude AS latitude," +
+                    "        s.longitude AS longitude," +
                     "        ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
                     "  FROM store s" +
                     "  JOIN pick p ON s.store_id = p.store_id AND p.user_id = :userId" +
@@ -104,6 +108,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
+                    "       s.latitude AS latitude," +
+                    "       s.longitude AS longitude," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
                     "  FROM store s" +
                     "  LEFT JOIN pick p ON s.store_id = p.store_id AND p.user_id = :userId" +
@@ -132,6 +138,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                     "       CASE WHEN p.pick_id IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS isPicked," +
                     "       s.category AS category," +
                     "       s.address AS address," +
+                    "       s.latitude AS latitude," +
+                    "       s.longitude AS longitude," +
                     "       ST_Distance_Sphere(point(s.longitude, s.latitude), point(:longitude, :latitude)) AS distance" +
                     "  FROM store s" +
                     "  LEFT JOIN pick p ON s.store_id = p.store_id AND p.user_id = :userId" +
