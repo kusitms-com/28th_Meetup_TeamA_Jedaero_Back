@@ -49,4 +49,11 @@ public class ContractService {
         return ReadContractsDto.from(contractRepository.findAllByUniversityAndStoreNameAndCategory(user.getUniversity(), request.getStoreNameForQuery(), request.getCategory(), page));
     }
 
+    public ReadContractDetailsDto readContractDetails(LoginUser loginUser, Long storeId) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Store store = storeRepository.findById(storeId).orElseThrow(RuntimeException::new);
+        Contract contract = contractRepository.findByUniversityAndStore(user.getUniversity(), store).orElseThrow(RuntimeException::new);
+        return ReadContractDetailsDto.from(contract);
+    }
+
 }

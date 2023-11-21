@@ -2,6 +2,7 @@ package com.backend.domain.contract.repository;
 
 import com.backend.domain.contract.entity.Contract;
 import com.backend.domain.store.entity.Category;
+import com.backend.domain.store.entity.Store;
 import com.backend.domain.university.entity.University;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,5 +58,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
                                                               @Param(value = "storeName") String storeName,
                                                               @Param(value = "category") Category category,
                                                               PageRequest page);
+
+    Optional<Contract> findByUniversityAndStore(University university, Store store);
 
 }

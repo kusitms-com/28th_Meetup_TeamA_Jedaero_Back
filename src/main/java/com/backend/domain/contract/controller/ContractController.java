@@ -4,6 +4,7 @@ import com.backend.common.dto.ResponseDto;
 import com.backend.domain.auth.dto.Login;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.contract.dto.CreateContractRequest;
+import com.backend.domain.contract.dto.ReadContractDetailsDto;
 import com.backend.domain.contract.dto.ReadContractsDto;
 import com.backend.domain.contract.service.ContractService;
 import com.backend.domain.store.dto.ReadRequest;
@@ -71,6 +72,38 @@ public class ContractController {
                             responseCode = "200")})
     public ResponseEntity<ReadContractsDto> readContracts(@Parameter(hidden = true) @Login LoginUser loginUser, @ModelAttribute ReadRequest request) {
         return ResponseDto.ok(contractService.readContracts(loginUser, request));
+    }
+
+    @GetMapping("/details/{storeId}")
+    @Operation(
+            summary = "제휴 가게 상세 조회",
+            description =
+                    "<h3>Request Parameter</h3>" +
+                    "<p>storeId : 상세 조회할 가게의 id</p>" +
+                    "<h3>Response</h3>" +
+                    "<p>storeName : 해당 가게 이름</p>" +
+                    "<p>category : 카테고리  [FOOD, CAFE, BEAUTY, CULTURE, ETC, NONE] 속하는 값</p>" +
+                    "<p>phoneNumber : 가게 연락처</p>" +
+                    "<p>manager : 대학 내 담당자(학생회 이름으로 설정됨)</p>" +
+                    "<p>mapUrl : 지도 url</p>" +
+                    "<p>startDate : 제휴 시작 날짜</p>" +
+                    "<p>endDate : 제휴 종료 날짜</p>" +
+                    "<p>latitude : 위도</p>" +
+                    "<p>longitude : 경도</p>" +
+                    "<p>benefits : 혜택 정보의 리스트</p>" +
+                    "<p>benefitId : 제휴 맺은 가게 재휴 혜택</p>" +
+                    "<p>type : 제휴 혜택 타입 [FIX, RATE, MENU] 중 하나</p>" +
+                    "<p>amount : 혜택의  크기</p>" +
+                    "<p>content : 혜택의 조건</p>" +
+                    "<p>visitInfo : 대시보드 정보를 담은 객체</p>" +
+                    "<p>visits : 일정 기간 동안 방문 객 수</p>" +
+                    "<p>totalBenefitAmount : 일정 기간 동안 고객이 받은 혜택의 총 양</p>" +
+                    "<p>achievementRate : 목표 달성률</p>",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200")})
+    public ResponseEntity<ReadContractDetailsDto> readContractDetails(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "storeId", example = "2") @PathVariable Long storeId) {
+        return ResponseDto.ok(contractService.readContractDetails(loginUser, storeId));
     }
 
 }
