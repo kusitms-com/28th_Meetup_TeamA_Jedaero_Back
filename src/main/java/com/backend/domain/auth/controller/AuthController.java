@@ -5,12 +5,12 @@ import com.backend.domain.auth.dto.Login;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.auth.dto.request.JoinRequestDto;
 import com.backend.domain.auth.dto.request.LoginRequestDto;
-import com.backend.error.dto.ErrorResponse;
 import com.backend.jwt.token.AccessToken;
 import com.backend.jwt.token.RefreshToken;
 import com.backend.jwt.token.Token;
 import com.backend.domain.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +36,7 @@ public class AuthController {
     @Operation(summary = "로그인", description = "로그인을 합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = String.class)))
             })
     @PostMapping("/login")
     public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginDto, HttpServletResponse response) {
@@ -54,7 +54,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "이미 존재하는 이메일입니다."),
                     @ApiResponse(responseCode = "400", description = "잘못된 그룹 종류입니다. " +
                             "type에 총학생회, 단과대학생회, 과학생회만 입력할 수 있습니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = String.class)))
             })
     @PostMapping("/join")
     public ResponseEntity<String> signUp(@RequestBody @Valid JoinRequestDto joinDto) {
@@ -66,12 +66,12 @@ public class AuthController {
     @Operation(summary = "토큰 재발급", description = "401에러가 발생한 경우 (AccessToken이 만료된 경우) 토큰을 재발급합니다.",
             responses = {
                     @ApiResponse(responseCode = "204", description = "토큰 재발급 성공",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = String.class)))
             })
     @PostMapping("/reissue")
-    public ResponseEntity<String> reissueToken(@CookieValue(name = "Authorization-refresh") String refreshToken,
+    public ResponseEntity<String> reissueToken(@Parameter @CookieValue(name = "Authorization-refresh") String refreshToken,
                                                HttpServletResponse response) {
-        log.info("재발급 토큰 = {}", refreshToken);
+        log.info("기존 토큰 = {}", refreshToken);
         Token token = authService.reissue(
                 RefreshToken.builder()
                         .header("Authorization-refresh")
@@ -81,17 +81,17 @@ public class AuthController {
 
         setAccessToken(response, token.getAccessToken());
         setRefreshToken(response, token.getRefreshToken());
-
+        log.info("재발급 토큰 = {}", token.getRefreshToken().getData());
         return ResponseDto.created("토큰 재발급 성공");
     }
 
     @Operation(summary = "로그아웃", description = "로그아웃을 합니다.",
             responses = {
                     @ApiResponse(responseCode = "204", description = "로그아웃 성공, AccessToken이 필요합니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = String.class)))
             })
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@Login LoginUser loginUser, HttpServletResponse response) {
+    public ResponseEntity<String> logout(@Login @Schema(hidden = true) LoginUser loginUser, HttpServletResponse response) {
         authService.logout(loginUser);
         log.info("이메일: {}", loginUser.getEmail());
         removeCookie(response);
