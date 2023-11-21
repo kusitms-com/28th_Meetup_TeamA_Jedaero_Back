@@ -36,4 +36,8 @@ public class Benefit extends BaseEntity {
         this.content = content;
     }
 
+    public void add(Contract contract) {
+        this.contract = contract;
+    }
+
 }
