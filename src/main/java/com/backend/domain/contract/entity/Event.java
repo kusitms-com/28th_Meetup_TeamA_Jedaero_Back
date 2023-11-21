@@ -34,4 +34,8 @@ public class Event extends BaseEntity {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
+    public void add(Contract contract) {
+        this.contract = contract;
+    }
+
 }

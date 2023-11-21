@@ -40,4 +40,14 @@ public class Benefit extends BaseEntity {
         this.contract = contract;
     }
 
+    public void expire() {
+        contract = null;
+    }
+
+    public void update(UpdateBenefitRequest request) {
+        type = request.getType();
+        amount = request.getAmount();
+        content = request.getContent();
+    }
+
 }

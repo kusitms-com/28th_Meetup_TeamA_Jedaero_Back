@@ -61,4 +61,31 @@ public class Contract extends BaseEntity {
         endDate = LocalDate.now().minusDays(1L);
     }
 
+    public void add(Event event) {
+        events.add(event);
+        event.add(this);
+    }
+
+    public void expire(Benefit benefit) {
+        benefits.remove(benefit);
+        benefit.expire();
+    }
+
+    public void expireAll() {
+        for (int i = benefits.size() - 1; i >= 0 ; i--) {
+            expire(benefits.get(i));
+        }
+    }
+
+    public void update(UpdateContractRequest request) {
+        this.startDate = request.getStartDate();
+        this.endDate = request.getEndDate();
+        this.manager = request.getManager();
+        expireAll();
+        benefits = request.getBenefits().stream()
+                .map(UpdateBenefitRequest::toEntity)
+                .peek(b -> b.add(this))
+                .toList();
+    }
+
 }

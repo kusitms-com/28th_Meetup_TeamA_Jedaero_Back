@@ -6,6 +6,7 @@ import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.contract.dto.CreateContractRequest;
 import com.backend.domain.contract.dto.ReadContractDetailsDto;
 import com.backend.domain.contract.dto.ReadContractsDto;
+import com.backend.domain.contract.dto.UpdateContractRequest;
 import com.backend.domain.contract.service.ContractService;
 import com.backend.domain.store.dto.ReadRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -104,6 +105,26 @@ public class ContractController {
                             responseCode = "200")})
     public ResponseEntity<ReadContractDetailsDto> readContractDetails(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "storeId", example = "2") @PathVariable Long storeId) {
         return ResponseDto.ok(contractService.readContractDetails(loginUser, storeId));
+    }
+
+    @PatchMapping
+    @Operation(
+            summary = "제휴 수정",
+            description =
+                    "<h3>Request Body</h3>" +
+                    "<p>storeId : 제휴 맺는 가게 아이디</p>" +
+                    "<p>benefits : 혜택에 대한 정보를 담은 객체의 리스트(1개의 혜택이어도 리스트에 담아야함)</p>" +
+                    "<p>startDate : 제휴가 시작되는 날짜를 입력 \"yyyy-MM-dd\" 형태로 입력</p>" +
+                    "<p>endDate : 제휴가 끝나는 날짜 입력 \"yyyy-MM-dd\" 형태로 입력</p>" +
+                    "<p>benefitId : 혜택을 수정하기 위한 식별자</p>" +
+                    "<p>type : 제휴의 타입 FIX, RATE, MENU를 사용</p>" +
+                    "<p>amount : 숫자를 입력, 20% -> 20, 5000원 -> 5000, 콜라 서비스 -> 1500(콜라가격)</p>" +
+                    "<p>content : 혜택을 위한 조건</p>",
+            responses = {
+                    @ApiResponse(responseCode = "200")})
+    public ResponseEntity<Void> updateContract(@Parameter(hidden = true) @Login LoginUser loginUser, @RequestBody UpdateContractRequest request) {
+        contractService.updateContract(loginUser, request);
+        return ResponseDto.ok();
     }
 
     @DeleteMapping("/{storeId}")

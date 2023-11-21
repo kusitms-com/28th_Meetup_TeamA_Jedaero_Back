@@ -63,4 +63,11 @@ public class ContractService {
         contract.expire();
     }
 
+    public void updateContract(LoginUser loginUser, UpdateContractRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Store store = storeRepository.findById(request.getStoreId()).orElseThrow(RuntimeException::new);
+        Contract contract = contractRepository.findByUniversityAndStore(user.getUniversity(), store).orElseThrow(RuntimeException::new);
+        contract.update(request);
+    }
+
 }
