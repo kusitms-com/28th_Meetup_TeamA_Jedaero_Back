@@ -4,6 +4,7 @@ import com.backend.domain.benefit.entity.Benefit;
 import com.backend.common.domain.BaseEntity;
 import com.backend.domain.contract.dto.UpdateBenefitRequest;
 import com.backend.domain.contract.dto.UpdateContractRequest;
+import com.backend.domain.event.entity.Event;
 import com.backend.domain.store.entity.Store;
 import com.backend.domain.university.entity.University;
 import jakarta.persistence.*;

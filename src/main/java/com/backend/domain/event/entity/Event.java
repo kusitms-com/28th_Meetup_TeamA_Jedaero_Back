@@ -1,7 +1,8 @@
-package com.backend.domain.contract.entity;
+package com.backend.domain.event.entity;
 
 import com.backend.common.domain.BaseEntity;
 import com.backend.domain.benefit.entity.BenefitType;
+import com.backend.domain.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
