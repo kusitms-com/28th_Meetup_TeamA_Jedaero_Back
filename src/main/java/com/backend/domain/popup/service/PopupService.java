@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class PopupService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(pageNumber, 5);
-        Page<Popup> popups = userRepository.findPopupsByUserId(user.getId(), pageable);
+        Page<Popup> popups = popupRepository.findPopupsPageByUserId(user.getId(), pageable);
         return popups.map(PopupGetResponseDto::from);
     }
 
@@ -68,6 +69,17 @@ public class PopupService {
 
     @Transactional
     public void deletePopup(LoginUser loginUser, Long popupId) {
+        User user = userRepository.findByEmail(loginUser.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        Popup deletePopup = popupRepository.findById(popupId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POPUP_NOT_FOUND));
+
+        List<Popup> popups = popupRepository.findPopupsByUserId(user.getId());
+
+        if (!popups.contains(deletePopup)) {
+            throw new BusinessException(ErrorCode.INVALID_POPUP);
+        }
         popupRepository.deleteById(popupId);
     }
 
