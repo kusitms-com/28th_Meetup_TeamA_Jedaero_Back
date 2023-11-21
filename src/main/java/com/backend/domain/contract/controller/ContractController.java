@@ -106,4 +106,18 @@ public class ContractController {
         return ResponseDto.ok(contractService.readContractDetails(loginUser, storeId));
     }
 
+    @DeleteMapping("/{storeId}")
+    @Operation(
+            summary = "제휴 종료",
+            description =
+                    "<h3>Path Variable</h3>" +
+                    "<p>storeId : 상세 조회할 가게의 id</p>",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200")})
+    public ResponseEntity<Void> deleteContract(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "storeId") @PathVariable Long storeId) {
+        contractService.deleteContract(loginUser, storeId);
+        return ResponseDto.ok();
+    }
+
 }

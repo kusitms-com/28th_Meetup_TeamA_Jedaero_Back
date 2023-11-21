@@ -57,4 +57,8 @@ public class Contract extends BaseEntity {
         this.benefits = benefits;
     }
 
+    public void expire() {
+        endDate = LocalDate.now().minusDays(1L);
+    }
+
 }

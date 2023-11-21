@@ -56,4 +56,11 @@ public class ContractService {
         return ReadContractDetailsDto.from(contract);
     }
 
+    public void deleteContract(LoginUser loginUser, Long storeId) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Store store = storeRepository.findById(storeId).orElseThrow(RuntimeException::new);
+        Contract contract = contractRepository.findByUniversityAndStore(user.getUniversity(), store).orElseThrow(RuntimeException::new);
+        contract.expire();
+    }
+
 }
