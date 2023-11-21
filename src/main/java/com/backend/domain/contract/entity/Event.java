@@ -1,39 +1,37 @@
-package com.backend.domain.benefit.entity;
+package com.backend.domain.contract.entity;
 
 import com.backend.common.domain.BaseEntity;
-import com.backend.domain.contract.dto.UpdateBenefitRequest;
-import com.backend.domain.contract.entity.Contract;
+import com.backend.domain.benefit.entity.BenefitType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
-@Table(name = "benefit")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Benefit extends BaseEntity {
+public class Event extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long benefitId;
+    private Long eventId;
 
     @Enumerated(EnumType.STRING)
     private BenefitType type;
 
+    private int conditions;
+
     private int amount;
 
-    private String content;
+    private int counts;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     private Contract contract;
-
-    @Builder
-    public Benefit(BenefitType type, int amount, String content) {
-        this.type = type;
-        this.amount = amount;
-        this.content = content;
-    }
 
 }
