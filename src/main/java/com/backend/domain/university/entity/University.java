@@ -16,10 +16,13 @@ import java.util.List;
 @Table(name = "university")
 public class University {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long universityId;
 
     private String name;
+
+    private String email;
 
     private Double latitude;
 
@@ -30,5 +33,4 @@ public class University {
 
     @OneToOne(mappedBy = "university")
     private User user;
-
 }
