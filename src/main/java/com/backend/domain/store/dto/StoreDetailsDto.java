@@ -17,6 +17,10 @@ public interface StoreDetailsDto {
 
     String getAddress();
 
+    Double getLatitude();
+
+    Double getLongitude();
+
     String getPhoneNumber();
 
     Double getDistance();

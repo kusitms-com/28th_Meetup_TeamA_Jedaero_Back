@@ -12,6 +12,10 @@ public interface StoresDto {
 
     String getAddress();
 
+    Double getLatitude();
+
+    Double getLongitude();
+
     Category getCategory();
 
     Double getDistance();
