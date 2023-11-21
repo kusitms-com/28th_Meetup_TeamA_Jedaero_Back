@@ -70,7 +70,7 @@ public class StoreService {
         pickRepository.delete(pick);
     }
 
-    public ReadStoresDto readStores(LoginUser loginUser, ReadStoresRequest request) {
+    public ReadStoresDto readStores(LoginUser loginUser, ReadRequest request) {
         User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
         University university = user.getUniversity();
         PageRequest pageRequest = PageRequest.of(request.getPageNumber(), request.getPageSize());
@@ -91,7 +91,7 @@ public class StoreService {
         return ReadStoresDto.from(stores);
     }
 
-    private String getKeyword(ReadStoresRequest request) {
+    private String getKeyword(ReadRequest request) {
         return "%" + request.getName() + "%";
     }
 

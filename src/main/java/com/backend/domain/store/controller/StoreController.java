@@ -58,7 +58,7 @@ public class StoreController {
                             responseCode = "200",
                             content = @Content(schema = @Schema(implementation = ReadStoresDto.class)))
             })
-    public ResponseEntity<ReadStoresDto> readStores(@Parameter(hidden = true) @Login LoginUser loginUser, @ModelAttribute ReadStoresRequest request) {
+    public ResponseEntity<ReadStoresDto> readStores(@Parameter(hidden = true) @Login LoginUser loginUser, @ModelAttribute ReadRequest request) {
         return ResponseDto.ok(storeService.readStores(loginUser, request));
     }
 
