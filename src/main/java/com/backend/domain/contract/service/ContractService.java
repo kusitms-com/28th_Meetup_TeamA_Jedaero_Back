@@ -38,4 +38,15 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
+    public ReadContractsDto readContracts(LoginUser loginUser, ReadRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Sort sort = Sort.by("createdTime").descending();
+        PageRequest page = PageRequest.of(request.getPageNumber(), request.getPageSize(), sort);
+        page.withSort(sort);
+        if (request.getCategory().equals(Category.NONE)) {
+            return ReadContractsDto.from(contractRepository.findAllByUniversityAndStoreName(user.getUniversity(), request.getStoreNameForQuery(), page));
+        }
+        return ReadContractsDto.from(contractRepository.findAllByUniversityAndStoreNameAndCategory(user.getUniversity(), request.getStoreNameForQuery(), request.getCategory(), page));
+    }
+
 }

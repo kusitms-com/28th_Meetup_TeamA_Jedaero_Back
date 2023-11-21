@@ -4,7 +4,9 @@ import com.backend.common.dto.ResponseDto;
 import com.backend.domain.auth.dto.Login;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.contract.dto.CreateContractRequest;
+import com.backend.domain.contract.dto.ReadContractsDto;
 import com.backend.domain.contract.service.ContractService;
+import com.backend.domain.store.dto.ReadRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,6 +42,35 @@ public class ContractController {
     public ResponseEntity<Void> createContract(@Parameter(hidden = true) @Login LoginUser loginUser, @RequestBody CreateContractRequest request) {
         contractService.createContract(loginUser, request);
         return ResponseDto.created();
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "제휴한 가게 목록 조회",
+            description =
+                    "<h3>Request Parameter</h3>" +
+                    "<p>isPicked : 사용X, true이든 false이든 결과가 달라지지 않음</p>" +
+                    "<p>name : 검색할 이름 입력</p>" +
+                    "<p>category : 카테고리  [FOOD, CAFE, BEAUTY, CULTURE, ETC, NONE] 중 하나 입력, 입력하지 않으면 NONE(전체카테고리)값으로 처리한다.</p>" +
+                    "<p>pageSize : 한번에 불러오는 데이터의 양, 정수값 입력</p>" +
+                    "<p>pageNumber : 정렬 후 몇번째 페이지를 불러올지 입력</p>" +
+                    "<h3>Response</h3>" +
+                    "<p>contractedStores : 제휴된 가게의 정보가 들어있는 리스트</p>" +
+                    "<p>pageNumber : 정렬 후 페이지 번호(request parameter에서의 값과 일치)</p>" +
+                    "<p>totalCount : 조건에 만족하는 총 가게 수</p>" +
+                    "<p>hasNext : 다음 페이지가 존재하는지(더 불러올 데이터가 남아있는지 여부)</p>" +
+                    "<p>storeId : 제휴 맺은 가게 id</p>" +
+                    "<p>storeName : 제휴 맺은 가게 이름</p>" +
+                    "<p>category : 제휴 맺은 가게 카테고리</p>" +
+                    "<p>benefitId : 제휴 맺은 가게 재휴 혜택</p>" +
+                    "<p>type : 제휴 혜택 타입 [FIX, RATE, MENU] 중 하나</p>" +
+                    "<p>amount : 혜택의  크기</p>" +
+                    "<p>content : 혜택의 조건</p>",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200")})
+    public ResponseEntity<ReadContractsDto> readContracts(@Parameter(hidden = true) @Login LoginUser loginUser, @ModelAttribute ReadRequest request) {
+        return ResponseDto.ok(contractService.readContracts(loginUser, request));
     }
 
 }
