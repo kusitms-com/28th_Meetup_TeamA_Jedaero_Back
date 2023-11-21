@@ -4,7 +4,6 @@ import com.backend.domain.mail.dto.request.MailRequest;
 import com.backend.domain.mail.dto.request.SmsRequest;
 import com.backend.domain.mail.service.MailService;
 import com.backend.error.ErrorCode;
-import com.backend.error.dto.ErrorResponse;
 import com.backend.error.exception.custom.BusinessException;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +26,7 @@ public class MailController {
     @Operation(summary = "메일 인증 코드 전송", description = "입력한 메일에 인증 코드를 전송합니다. 형식: test@test.com",
             responses = {
                     @ApiResponse(responseCode = "200", description = "인증 코드 전송 성공, 보낸 인증 코드를 반환합니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = Integer.class)))
             })
     @GetMapping("/mail")
     public ResponseEntity<Integer> sendCode(@Valid @RequestBody MailRequest emailRequest) {
@@ -37,7 +36,7 @@ public class MailController {
     @Operation(summary = "문자 인증 코드 전송", description = "입력한 번호에 인증 코드를 전송합니다. 형식: 01012345678",
             responses = {
                     @ApiResponse(responseCode = "200", description = "인증 코드 전송 성공, 보낸 인증 코드를 반환합니다.",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            content = @Content(schema = @Schema(implementation = Integer.class)))
             })
     @RateLimiter(name = "jedero", fallbackMethod = "rateLimiterFallback")
     @GetMapping("/sms")
