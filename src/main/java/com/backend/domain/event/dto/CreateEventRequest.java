@@ -28,6 +28,8 @@ public class CreateEventRequest {
 
     private List<String> conditions;
 
+    private int discount;
+
     @Schema(example = "50")
     private int quantity;
 
@@ -42,6 +44,7 @@ public class CreateEventRequest {
                 .type(type)
                 .name(name)
                 .quantity(quantity)
+                .discount(discount)
                 .startDate(startDate)
                 .endDate(startDate.plusDays(duration.getPlusDate()))
                 .build();
