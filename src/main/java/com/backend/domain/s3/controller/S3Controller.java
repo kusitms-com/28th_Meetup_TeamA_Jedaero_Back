@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class S3Controller {
                     @ApiResponse(responseCode = "401", description = "토큰이 올바르지 않을 때 예외가 발생합니다.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             })
+    @SecurityRequirement(name = "bearer-key")
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteImage(@Login LoginUser loginUser, @RequestPart String fileName) {
         s3Service.deleteImage(loginUser, fileName);

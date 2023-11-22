@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -90,6 +91,7 @@ public class AuthController {
                     @ApiResponse(responseCode = "204", description = "로그아웃 성공, AccessToken이 필요합니다.",
                             content = @Content(schema = @Schema(implementation = String.class)))
             })
+    @SecurityRequirement(name = "bearer-key")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@Login @Schema(hidden = true) LoginUser loginUser, HttpServletResponse response) {
         authService.logout(loginUser);

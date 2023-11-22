@@ -36,7 +36,7 @@ public class User extends BaseEntity {
 
     private String proofImageUrl;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
     private University university;
 
@@ -44,13 +44,14 @@ public class User extends BaseEntity {
     private List<Pick> picks = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, GroupType type, String typeName, String refreshToken, String proofImageUrl) {
+    public User(String email, String password, GroupType type, String typeName, String refreshToken, String proofImageUrl, University university) {
         this.email = email;
         this.password = password;
         this.type = type;
         this.typeName = typeName;
         this.refreshToken = refreshToken;
         this.proofImageUrl = proofImageUrl;
+        this.university = university;
     }
 
     public void updateRefreshToken(String refreshToken) {

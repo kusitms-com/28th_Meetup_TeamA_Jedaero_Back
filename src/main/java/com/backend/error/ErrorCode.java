@@ -23,7 +23,8 @@ public enum ErrorCode {
     STORE_NOT_FOUND(NOT_FOUND, "해당 가게를 찾을 수 없습니다."),
     INVALID_DATE(BAD_REQUEST, "잘못된 날짜 형식입니다."),
     POPUP_NOT_FOUND(NOT_FOUND, "팝업이 존재하지 않습니다."),
-    INVALID_POPUP(BAD_REQUEST, "잘못된 팝업 요청입니다.");
+    INVALID_POPUP(BAD_REQUEST, "잘못된 팝업 요청입니다."),
+    UNIV_NOT_FOUND(BAD_REQUEST, "해당 대학을 찾을 수 없습니다.");
 
     private final int code;
     private final String message;
