@@ -30,17 +30,27 @@ public class CreateContractRequest {
     private LocalDate endDate;
 
     public Contract toEntity(User user, Store store) {
-        List<Benefit> benefits = this.benefits.stream()
-                .map(CreateBenefitRequest::toEntity)
-                .toList();
         return Contract.builder()
-                .startDate(startDate == null ? LocalDate.now() : startDate)
+                .startDate(createStartDate())
                 .endDate(endDate)
                 .manager(user.getTypeName())
                 .university(user.getUniversity())
                 .store(store)
-                .benefits(benefits)
+                .benefits(createBenefits())
                 .build();
+    }
+
+    public LocalDate createStartDate() {
+        if (startDate == null) {
+            return LocalDate.now();
+        }
+        return startDate;
+    }
+
+    public List<Benefit> createBenefits() {
+        return this.benefits.stream()
+                .map(CreateBenefitRequest::toEntity)
+                .toList();
     }
 
 }
