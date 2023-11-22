@@ -4,15 +4,17 @@ import com.backend.common.dto.ResponseDto;
 import com.backend.domain.auth.dto.Login;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.event.dto.*;
+import com.backend.domain.event.entity.EventType;
 import com.backend.domain.event.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,6 +63,12 @@ public class EventController {
     @Operation(summary = "이벤트 삭제")
     public ResponseEntity<Void> deleteEvent(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "eventId") @PathVariable Long eventId) {
         eventService.deleteEvent(loginUser, eventId);
+        return ResponseDto.ok();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteEvent(@Parameter(hidden = true) @Login LoginUser loginUser, @RequestParam(name = "type") EventType type, @RequestParam(name = "ids") List<Long> ids) {
+        eventService.deleteEvents(loginUser, type, ids);
         return ResponseDto.ok();
     }
 

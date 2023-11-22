@@ -5,6 +5,7 @@ import com.backend.domain.contract.entity.Contract;
 import com.backend.domain.contract.repository.ContractRepository;
 import com.backend.domain.event.dto.*;
 import com.backend.domain.event.entity.Event;
+import com.backend.domain.event.entity.EventType;
 import com.backend.domain.event.repository.EventRepository;
 import com.backend.domain.store.entity.Store;
 import com.backend.domain.store.repository.StoreRepository;
@@ -71,6 +72,11 @@ public class EventService {
         if (!event.getContract().getUniversity().equals(user.getUniversity())) {
             throw new RuntimeException();
         }
+    }
+
+    public void deleteEvents(LoginUser loginUser, EventType type, List<Long> ids) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        eventRepository.findAllByEventIdInAndType(ids, type).forEach(Event::expire);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.backend.domain.event.dto;
 
-import com.backend.domain.benefit.entity.BenefitType;
 import com.backend.domain.event.entity.Condition;
 import com.backend.domain.event.entity.Event;
+import com.backend.domain.event.entity.EventType;
 import com.backend.domain.store.dto.StoreDto;
 import com.backend.domain.store.entity.Store;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class ReadEventDto {
 
     private Long eventId;
 
-    private BenefitType eventType;
+    private EventType eventType;
 
     private String eventName;
 
