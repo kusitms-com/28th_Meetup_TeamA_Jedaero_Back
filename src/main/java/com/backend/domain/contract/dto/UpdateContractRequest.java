@@ -1,5 +1,7 @@
 package com.backend.domain.contract.dto;
 
+import com.backend.domain.benefit.entity.Benefit;
+import com.backend.domain.contract.entity.Contract;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,5 +29,12 @@ public class UpdateContractRequest {
 
     @Schema(name = "manager", example = "숭실대 총학생회")
     private String manager;
+
+    public List<Benefit> createBenefits(Contract contract) {
+        return benefits.stream()
+                .map(UpdateBenefitRequest::toEntity)
+                .peek(b -> b.add(contract))
+                .toList();
+    }
 
 }

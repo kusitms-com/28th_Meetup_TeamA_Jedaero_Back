@@ -1,7 +1,6 @@
 package com.backend.domain.benefit.entity;
 
 import com.backend.common.domain.BaseEntity;
-import com.backend.domain.contract.dto.UpdateBenefitRequest;
 import com.backend.domain.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -45,12 +44,6 @@ public class Benefit extends BaseEntity {
 
     public void expire() {
         contract = null;
-    }
-
-    public void update(UpdateBenefitRequest request) {
-        type = request.getType();
-        amount = request.getAmount();
-        conditions = request.getConditions();
     }
 
 }

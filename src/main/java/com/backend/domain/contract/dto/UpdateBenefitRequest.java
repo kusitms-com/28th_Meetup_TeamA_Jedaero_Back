@@ -23,18 +23,32 @@ public class UpdateBenefitRequest {
     @Schema(description = "할인 받는 양(int형)", example = "10")
     private int amount;
 
+    @Schema(example = "null")
     private String menu;
 
     @Schema(description = "조건 작성", example = "메인메뉴 구입시")
-    private String conditions;
+    private String condition;
 
     public Benefit toEntity() {
+        validateType();
         return Benefit.builder()
                 .type(type)
                 .amount(amount)
                 .menu(menu)
-                .conditions(conditions)
+                .conditions(condition)
                 .build();
+    }
+
+    public void validateType() {
+        if (type.equals(BenefitType.MENU)) {
+            if (menu == null) {
+                throw new RuntimeException();
+            }
+        } else {
+            if (menu != null) {
+                menu = null;
+            }
+        }
     }
 
 }
