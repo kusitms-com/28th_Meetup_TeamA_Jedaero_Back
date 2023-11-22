@@ -49,7 +49,7 @@ public class StoreService {
         User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
         StoreDetailsDto storeDetail = storeRepository.findStoreDetailById(user.getId(), storeId, user.getUniversity().getLatitude(), user.getUniversity().getLongitude()).orElseThrow(RuntimeException::new);
         List<BusinessHour> businessHours = businessHourRepository.findByStoreStoreId(storeId);
-        return ReadStoreDetailsDto.from(storeDetail, businessHours);
+        return ReadStoreDetailsDto.from(storeDetail, businessHours, user);
     }
 
     public void createPick(LoginUser loginUser, PickRequest request) {
