@@ -3,6 +3,8 @@ package com.backend.domain.auth.service;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.auth.dto.request.JoinRequestDto;
 import com.backend.domain.auth.dto.request.LoginRequestDto;
+import com.backend.domain.university.entity.University;
+import com.backend.domain.university.repository.UniversityRepository;
 import com.backend.jwt.service.JwtProvider;
 import com.backend.jwt.token.RefreshToken;
 import com.backend.jwt.token.Token;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UniversityRepository universityRepository;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -51,7 +54,9 @@ public class AuthService {
             throw new BusinessException(ErrorCode.ALREADY_EXIST_EMAIL);
         }
 //        if (userRepository.existsByNickname(joinRequestDto.getNickname())) {}
-        userRepository.save(joinRequestDto.toEntity(passwordEncoder));
+        University university = universityRepository.findById(joinRequestDto.univId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNIV_NOT_FOUND));
+        userRepository.save(joinRequestDto.toEntity(passwordEncoder, university));
     }
 
     @Transactional
