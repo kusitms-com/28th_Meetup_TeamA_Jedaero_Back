@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         }
-        response.setHeader("Access-Control-Allow-Origin", "https://jedero.site");
+        //response.setHeader("Access-Control-Allow-Origin", "https://jedero.site");
         filterChain.doFilter(request, response);
     }
 }
