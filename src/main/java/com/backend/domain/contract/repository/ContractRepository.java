@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
@@ -60,5 +61,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
                                                               PageRequest page);
 
     Optional<Contract> findByUniversityAndStore(University university, Store store);
+
+    List<Contract> findAllByUniversity(University university);
 
 }
