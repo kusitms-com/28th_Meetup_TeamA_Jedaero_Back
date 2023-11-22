@@ -15,19 +15,29 @@ public class BenefitDto {
 
     private Long benefitId;
 
-    private BenefitType type;
-
-    private int amount;
+    private String condition;
 
     private String content;
 
     public static BenefitDto from(Benefit benefit) {
         return BenefitDto.builder()
                 .benefitId(benefit.getBenefitId())
-                .type(benefit.getType())
-                .amount(benefit.getAmount())
-                .content(benefit.getContent())
+                .content(createContent(benefit))
+                .condition(benefit.getConditions())
                 .build();
+    }
+
+    public static String createContent(Benefit benefit) {
+        if (benefit.getType().equals(BenefitType.FIX)) {
+            return benefit.getAmount() + "원 할인";
+        }
+        if (benefit.getType().equals(BenefitType.RATE)) {
+            return benefit.getAmount() + "% 할인";
+        }
+        if (benefit.getType().equals(BenefitType.MENU)) {
+            return benefit.getMenu() + " 무료 제공";
+        }
+        throw new RuntimeException();
     }
 
 }

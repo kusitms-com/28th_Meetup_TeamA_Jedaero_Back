@@ -21,6 +21,8 @@ public class ReadContractDto {
 
     private Category category;
 
+    private String address;
+
     private List<BenefitDto> benefits;
 
     public static ReadContractDto from(Contract contract) {
@@ -28,11 +30,12 @@ public class ReadContractDto {
                 .storeId(contract.getStore().getStoreId())
                 .storeName(contract.getStore().getName())
                 .category(contract.getStore().getCategory())
-                .benefits(getBenefitDtos(contract))
+                .address(contract.getStore().getAddress())
+                .benefits(createBenefitDtos(contract))
                 .build();
     }
 
-    private static List<BenefitDto> getBenefitDtos(Contract contract) {
+    private static List<BenefitDto> createBenefitDtos(Contract contract) {
         return contract.getBenefits().stream()
                 .map(BenefitDto::from)
                 .toList();

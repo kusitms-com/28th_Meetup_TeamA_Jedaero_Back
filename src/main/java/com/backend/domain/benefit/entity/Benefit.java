@@ -1,7 +1,6 @@
 package com.backend.domain.benefit.entity;
 
 import com.backend.common.domain.BaseEntity;
-import com.backend.domain.contract.dto.UpdateBenefitRequest;
 import com.backend.domain.contract.entity.Contract;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,17 +22,20 @@ public class Benefit extends BaseEntity {
 
     private int amount;
 
-    private String content;
+    private String menu;
+
+    private String conditions;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
     @Builder
-    public Benefit(BenefitType type, int amount, String content) {
+    public Benefit(BenefitType type, int amount, String conditions, String menu) {
         this.type = type;
         this.amount = amount;
-        this.content = content;
+        this.conditions = conditions;
+        this.menu = menu;
     }
 
     public void add(Contract contract) {
@@ -42,12 +44,6 @@ public class Benefit extends BaseEntity {
 
     public void expire() {
         contract = null;
-    }
-
-    public void update(UpdateBenefitRequest request) {
-        type = request.getType();
-        amount = request.getAmount();
-        content = request.getContent();
     }
 
 }

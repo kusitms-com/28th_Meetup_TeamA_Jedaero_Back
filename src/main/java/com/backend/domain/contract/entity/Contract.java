@@ -1,8 +1,7 @@
 package com.backend.domain.contract.entity;
 
-import com.backend.domain.benefit.entity.Benefit;
 import com.backend.common.domain.BaseEntity;
-import com.backend.domain.contract.dto.UpdateBenefitRequest;
+import com.backend.domain.benefit.entity.Benefit;
 import com.backend.domain.contract.dto.UpdateContractRequest;
 import com.backend.domain.event.entity.Event;
 import com.backend.domain.store.entity.Store;
@@ -83,10 +82,7 @@ public class Contract extends BaseEntity {
         this.endDate = request.getEndDate();
         this.manager = request.getManager();
         expireAll();
-        benefits = request.getBenefits().stream()
-                .map(UpdateBenefitRequest::toEntity)
-                .peek(b -> b.add(this))
-                .toList();
+        benefits.addAll(request.createBenefits(this));
     }
 
 }

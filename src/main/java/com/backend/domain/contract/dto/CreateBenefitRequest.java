@@ -21,14 +21,30 @@ public class CreateBenefitRequest {
     private int amount;
 
     @Schema(description = "조건 작성", example = "메인메뉴 구입시")
-    private String content;
+    private String condition;
+
+    private String menu;
 
     public Benefit toEntity() {
+        validateType();
         return Benefit.builder()
                 .type(type)
                 .amount(amount)
-                .content(content)
+                .menu(menu)
+                .conditions(condition)
                 .build();
+    }
+
+    public void validateType() {
+        if (type.equals(BenefitType.MENU)) {
+            if (menu == null) {
+                throw new RuntimeException();
+            }
+        } else {
+            if (menu != null) {
+                menu = null;
+            }
+        }
     }
 
 }

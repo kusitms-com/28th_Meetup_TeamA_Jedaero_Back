@@ -34,6 +34,8 @@ public class ReadContractDetailsDto {
 
     private LocalDate endDate;
 
+    private String address;
+
     private Double latitude;
 
     private Double longitude;
@@ -51,6 +53,7 @@ public class ReadContractDetailsDto {
                 .mapUrl(contract.getStore().getMapUrl())
                 .startDate(contract.getStartDate())
                 .endDate(contract.getEndDate())
+                .address(contract.getStore().getAddress())
                 .latitude(contract.getStore().getLatitude())
                 .longitude(contract.getStore().getLongitude())
                 .benefits(getBenefitDtos(contract))
