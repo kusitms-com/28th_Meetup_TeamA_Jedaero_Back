@@ -43,13 +43,20 @@ public class CreateEventRequest {
         Event event = Event.builder()
                 .type(type)
                 .name(name)
-                .quantity(quantity)
+                .quantity(createDiscount())
                 .discount(discount)
                 .startDate(startDate)
                 .endDate(startDate.plusDays(duration.getPlusDate()))
                 .build();
         event.addAll(createConditions());
         return event;
+    }
+
+    private int createDiscount() {
+        if (type.equals(BenefitType.STAMP)) {
+            return 0;
+        }
+        return discount;
     }
 
     private List<Condition> createConditions() {
