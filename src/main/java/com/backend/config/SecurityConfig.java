@@ -85,7 +85,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("jedero.site")
+                .allowedOrigins("http://localhost:3000" ,"https://jedero.site", "https://api.jedero.site, https://jedaero-client-doday.vercel.app/")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
