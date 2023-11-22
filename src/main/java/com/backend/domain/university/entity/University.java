@@ -31,6 +31,6 @@ public class University {
     @OneToMany(mappedBy = "university")
     private List<Contract> contracts = new ArrayList<>();
 
-    @OneToOne(mappedBy = "university")
-    private User user;
+    @OneToMany(mappedBy = "university")
+    private List<User> users = new ArrayList<>();
 }
