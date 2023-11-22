@@ -53,8 +53,8 @@ public class CreateEventRequest {
         Event event = Event.builder()
                 .type(type)
                 .name(name)
-                .quantity(createDiscount())
-                .discount(quantity)
+                .quantity(quantity)
+                .discount(createDiscount())
                 .startDate(startDate)
                 .endDate(createEndDate())
                 .build();
