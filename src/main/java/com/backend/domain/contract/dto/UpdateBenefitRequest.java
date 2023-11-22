@@ -23,14 +23,17 @@ public class UpdateBenefitRequest {
     @Schema(description = "할인 받는 양(int형)", example = "10")
     private int amount;
 
+    private String menu;
+
     @Schema(description = "조건 작성", example = "메인메뉴 구입시")
-    private String content;
+    private String conditions;
 
     public Benefit toEntity() {
         return Benefit.builder()
                 .type(type)
                 .amount(amount)
-                .content(content)
+                .menu(menu)
+                .conditions(conditions)
                 .build();
     }
 

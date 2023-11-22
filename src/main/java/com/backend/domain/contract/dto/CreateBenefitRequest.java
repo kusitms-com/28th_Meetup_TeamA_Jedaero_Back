@@ -21,13 +21,13 @@ public class CreateBenefitRequest {
     private int amount;
 
     @Schema(description = "조건 작성", example = "메인메뉴 구입시")
-    private String content;
+    private String condition;
 
     public Benefit toEntity() {
         return Benefit.builder()
                 .type(type)
                 .amount(amount)
-                .content(content)
+                .conditions(condition)
                 .build();
     }
 
