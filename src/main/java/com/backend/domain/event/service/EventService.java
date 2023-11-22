@@ -3,10 +3,7 @@ package com.backend.domain.event.service;
 import com.backend.domain.auth.dto.LoginUser;
 import com.backend.domain.contract.entity.Contract;
 import com.backend.domain.contract.repository.ContractRepository;
-import com.backend.domain.event.dto.CreateEventRequest;
-import com.backend.domain.event.dto.ReadCouponsDto;
-import com.backend.domain.event.dto.ReadEventsDto;
-import com.backend.domain.event.dto.ReadEventsRequest;
+import com.backend.domain.event.dto.*;
 import com.backend.domain.event.entity.Event;
 import com.backend.domain.event.repository.EventRepository;
 import com.backend.domain.store.entity.Store;
@@ -61,6 +58,13 @@ public class EventService {
         Event event = eventRepository.findById(eventId).orElseThrow(RuntimeException::new);
         validateAuthority(user, event);
         event.expire();
+    }
+
+    public void updateEvent(LoginUser loginUser, UpdateEventRequest request) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Event event = eventRepository.findById(request.getEventId()).orElseThrow(RuntimeException::new);
+        validateAuthority(user, event);
+        event.update(request);
     }
 
     public void validateAuthority(User user, Event event) {

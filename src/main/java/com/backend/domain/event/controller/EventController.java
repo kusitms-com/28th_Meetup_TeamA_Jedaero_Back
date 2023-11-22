@@ -3,10 +3,7 @@ package com.backend.domain.event.controller;
 import com.backend.common.dto.ResponseDto;
 import com.backend.domain.auth.dto.Login;
 import com.backend.domain.auth.dto.LoginUser;
-import com.backend.domain.event.dto.CreateEventRequest;
-import com.backend.domain.event.dto.ReadCouponsDto;
-import com.backend.domain.event.dto.ReadEventsDto;
-import com.backend.domain.event.dto.ReadEventsRequest;
+import com.backend.domain.event.dto.*;
 import com.backend.domain.event.service.EventService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +38,13 @@ public class EventController {
         ReadEventsDto events = eventService.readEvents(loginUser, request);
         return ResponseDto.ok(events);
     }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateEvent(@Parameter(hidden = true) @Login LoginUser loginUser, @RequestBody UpdateEventRequest request) {
+        eventService.updateEvent(loginUser, request);
+        return ResponseDto.ok();
+    }
+
 
     @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "eventId") @PathVariable Long eventId) {

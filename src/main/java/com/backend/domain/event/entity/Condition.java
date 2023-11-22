@@ -28,4 +28,7 @@ public class Condition {
         this.event = event;
     }
 
+    public void delete() {
+        event = null;
+    }
 }
