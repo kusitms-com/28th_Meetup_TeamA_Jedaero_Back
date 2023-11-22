@@ -1,8 +1,8 @@
 package com.backend.domain.event.dto;
 
-import com.backend.domain.benefit.entity.BenefitType;
 import com.backend.domain.event.entity.Condition;
 import com.backend.domain.event.entity.Event;
+import com.backend.domain.event.entity.EventType;
 import com.backend.domain.popup.domain.EndDateType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -24,7 +24,7 @@ public class CreateEventRequest {
 
     @Schema(example = "COUPON")
     @NotEmpty
-    private BenefitType type;
+    private EventType type;
 
     @Schema(example = "5000원 할인 쿠폰")
     @NotEmpty
@@ -63,7 +63,7 @@ public class CreateEventRequest {
     }
 
     private void validateDuration() {
-        if (type.equals(BenefitType.STAMP)) {
+        if (type.equals(EventType.STAMP)) {
             if (duration == null) {
                 throw new RuntimeException();
             }
@@ -77,7 +77,7 @@ public class CreateEventRequest {
     }
 
     private int createDiscount() {
-        if (type.equals(BenefitType.STAMP)) {
+        if (type.equals(EventType.STAMP)) {
             return 0;
         }
         return discount;

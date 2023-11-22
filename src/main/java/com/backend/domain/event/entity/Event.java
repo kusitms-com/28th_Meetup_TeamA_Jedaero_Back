@@ -1,7 +1,6 @@
 package com.backend.domain.event.entity;
 
 import com.backend.common.domain.BaseEntity;
-import com.backend.domain.benefit.entity.BenefitType;
 import com.backend.domain.contract.entity.Contract;
 import com.backend.domain.event.dto.UpdateEventRequest;
 import jakarta.persistence.*;
@@ -25,7 +24,7 @@ public class Event extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private BenefitType type;
+    private EventType type;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Condition> conditions = new ArrayList<>();
@@ -43,7 +42,7 @@ public class Event extends BaseEntity {
     private Contract contract;
 
     @Builder
-    public Event(BenefitType type, String name, int discount, int quantity, LocalDate startDate, LocalDate endDate, Contract contract) {
+    public Event(EventType type, String name, int discount, int quantity, LocalDate startDate, LocalDate endDate, Contract contract) {
         this.type = type;
         this.name = name;
         this.discount = discount;
@@ -68,7 +67,7 @@ public class Event extends BaseEntity {
     }
 
     public void setDate(Contract contract) {
-        if (type.equals(BenefitType.COUPON)) {
+        if (type.equals(EventType.COUPON)) {
             this.startDate = contract.getStartDate();
             this.endDate = contract.getEndDate();
         }
@@ -82,7 +81,7 @@ public class Event extends BaseEntity {
         name = request.getName();
         discount = request.getDiscount();
         quantity = request.getQuantity();
-        if (type.equals(BenefitType.STAMP)) {
+        if (type.equals(EventType.STAMP)) {
             startDate = request.getStartDate();
             endDate = startDate.plusDays(request.getDuration().getPlusDate());
         }

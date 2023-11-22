@@ -1,6 +1,6 @@
 package com.backend.domain.event.dto;
 
-import com.backend.domain.benefit.entity.BenefitType;
+import com.backend.domain.event.entity.EventType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 public class ReadEventsRequest {
 
     @Schema(example = "COUPON")
-    private BenefitType type;
+    private EventType type;
 
     @Schema(example = "40")
     private int pageSize;
@@ -24,7 +24,7 @@ public class ReadEventsRequest {
     {
         pageSize = 40;
         pageNumber = 0;
-        type = BenefitType.COUPON;
+        type = EventType.COUPON;
     }
 
     @Schema(hidden = true)
