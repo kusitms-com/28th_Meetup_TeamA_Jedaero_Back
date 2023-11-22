@@ -12,7 +12,7 @@ public record ResponseDto<T>(T data) implements Serializable {
 
     public static ResponseEntity<Void> ok() {
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .build();
     }
 
