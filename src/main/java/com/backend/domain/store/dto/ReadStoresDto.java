@@ -1,5 +1,7 @@
 package com.backend.domain.store.dto;
 
+import com.backend.domain.user.dto.RepresentativeDto;
+import com.backend.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ReadStoresDto {
 
+    private RepresentativeDto user;
+
     private List<StoresDto> stores;
 
     private int pageNumber;
@@ -22,8 +26,9 @@ public class ReadStoresDto {
 
     private boolean hasNext;
 
-    public static ReadStoresDto from(Page<StoresDto> stores) {
+    public static ReadStoresDto from(Page<StoresDto> stores, User user) {
         return ReadStoresDto.builder()
+                .user(RepresentativeDto.from(user))
                 .stores(stores.getContent())
                 .pageNumber(stores.getNumber())
                 .totalCount(stores.getTotalElements())

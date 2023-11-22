@@ -49,7 +49,7 @@ public class StoreService {
         User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
         StoreDetailsDto storeDetail = storeRepository.findStoreDetailById(user.getId(), storeId, user.getUniversity().getLatitude(), user.getUniversity().getLongitude()).orElseThrow(RuntimeException::new);
         List<BusinessHour> businessHours = businessHourRepository.findByStoreStoreId(storeId);
-        return ReadStoreDetailsDto.from(storeDetail, businessHours);
+        return ReadStoreDetailsDto.from(storeDetail, businessHours, user);
     }
 
     public void createPick(LoginUser loginUser, PickRequest request) {
@@ -78,17 +78,17 @@ public class StoreService {
         if (request.getIsPicked()) {
             if (request.getCategory().equals(Category.NONE)) {
                 Page<StoresDto> stores = storeRepository.findAllContainsNameAndPicked(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
-                return ReadStoresDto.from(stores);
+                return ReadStoresDto.from(stores, user);
             }
             Page<StoresDto> stores = storeRepository.findAllContainsNameAndPickedAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
-            return ReadStoresDto.from(stores);
+            return ReadStoresDto.from(stores, user);
         }
         if (request.getCategory().equals(Category.NONE)) {
             Page<StoresDto> stores = storeRepository.findAllContainsName(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
-            return ReadStoresDto.from(stores);
+            return ReadStoresDto.from(stores, user);
         }
         Page<StoresDto> stores = storeRepository.findAllContainsNameAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
-        return ReadStoresDto.from(stores);
+        return ReadStoresDto.from(stores, user);
     }
 
     private String getKeyword(ReadRequest request) {
