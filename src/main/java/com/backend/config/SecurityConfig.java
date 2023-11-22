@@ -63,6 +63,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers(mvcMatcherBuilder.pattern("/mail/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/s3/create")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/sms")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("/univ/**")).permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling()
                 .authenticationEntryPoint(entryPoint);
