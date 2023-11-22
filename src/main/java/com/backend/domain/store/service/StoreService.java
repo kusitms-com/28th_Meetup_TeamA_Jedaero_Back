@@ -78,17 +78,17 @@ public class StoreService {
         if (request.getIsPicked()) {
             if (request.getCategory().equals(Category.NONE)) {
                 Page<StoresDto> stores = storeRepository.findAllContainsNameAndPicked(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
-                return ReadStoresDto.from(stores);
+                return ReadStoresDto.from(stores, user);
             }
             Page<StoresDto> stores = storeRepository.findAllContainsNameAndPickedAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
-            return ReadStoresDto.from(stores);
+            return ReadStoresDto.from(stores, user);
         }
         if (request.getCategory().equals(Category.NONE)) {
             Page<StoresDto> stores = storeRepository.findAllContainsName(user.getId(), university.getLongitude(), university.getLatitude(), keyword, pageRequest);
-            return ReadStoresDto.from(stores);
+            return ReadStoresDto.from(stores, user);
         }
         Page<StoresDto> stores = storeRepository.findAllContainsNameAndCategory(user.getId(), university.getLongitude(), university.getLatitude(), keyword, request.getCategory().name(), pageRequest);
-        return ReadStoresDto.from(stores);
+        return ReadStoresDto.from(stores, user);
     }
 
     private String getKeyword(ReadRequest request) {
