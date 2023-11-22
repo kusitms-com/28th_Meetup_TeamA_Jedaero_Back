@@ -87,7 +87,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000" ,"https://jedero.site", "https://api.jedero.site, https://jedaero-client-doday.vercel.app/")
                 .allowedMethods("*")
-                .allowedHeaders("*")
+                .allowedHeaders("Access-Control-Allow-Origin", "*")
                 .allowCredentials(true)
                 .exposedHeaders("*");
     }
