@@ -42,4 +42,10 @@ public class EventController {
         return ResponseDto.ok(events);
     }
 
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@Parameter(hidden = true) @Login LoginUser loginUser, @Parameter(name = "eventId") @PathVariable Long eventId) {
+        eventService.deleteEvent(loginUser, eventId);
+        return ResponseDto.ok();
+    }
+
 }

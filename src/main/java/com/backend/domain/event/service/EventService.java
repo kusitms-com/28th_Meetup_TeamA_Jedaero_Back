@@ -56,4 +56,17 @@ public class EventService {
         return ReadEventsDto.from(events);
     }
 
+    public void deleteEvent(LoginUser loginUser, Long eventId) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(RuntimeException::new);
+        Event event = eventRepository.findById(eventId).orElseThrow(RuntimeException::new);
+        validateAuthority(user, event);
+        event.expire();
+    }
+
+    public void validateAuthority(User user, Event event) {
+        if (!event.getContract().getUniversity().equals(user.getUniversity())) {
+            throw new RuntimeException();
+        }
+    }
+
 }

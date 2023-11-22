@@ -73,4 +73,8 @@ public class Event extends BaseEntity {
         }
     }
 
+    public void expire() {
+        this.endDate = LocalDate.now().minusDays(1);
+    }
+
 }
