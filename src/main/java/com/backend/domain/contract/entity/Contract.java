@@ -37,7 +37,7 @@ public class Contract extends BaseEntity {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.PERSIST)
     private List<Benefit> benefits = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.PERSIST)
     private List<Event> events = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
