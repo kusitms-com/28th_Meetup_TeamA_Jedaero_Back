@@ -12,11 +12,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 
 @Slf4j
-public record PopupGetResponseDto(String content, String endDate, String reservation) {
+public record PopupGetResponseDto(String content, String endDate, String reservation, Long popupId) {
 
     public static PopupGetResponseDto from(Popup popup) {
         return new PopupGetResponseDto(popup.getContent(), getEndDate(popup).getDateType(),
-                getReservation(popup).getReservationType());
+                getReservation(popup).getReservationType(), popup.getId());
     }
 
     private static EndDateType getEndDate(Popup popup) {
