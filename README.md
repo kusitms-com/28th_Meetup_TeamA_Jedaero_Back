@@ -5,6 +5,10 @@
 |[yeop0740](https://github.com/yeop0740)|[pdohyung](https://github.com/pdohyung)|
 <br>
 
+## 백엔드 룰
+[백엔드 이슈 및 PR 생성 방식](https://lively-snowflake-01d.notion.site/47f58822a04c4d5c9c143eb611275461?pvs=4)
+
+
 ## 커밋 컨벤션
 - `feat` : 새로운 기능 추가
 - `fix` : 버그 수정
